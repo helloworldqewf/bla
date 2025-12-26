@@ -1,0 +1,736 @@
+# Задание 1
+from itertools import permutations
+
+Map = [{"A", "B"}, {"A", "D"}, {"A", "C"}, {"A", "D"}, {"A", "F"}, {"A", "G"}, 
+       {"B", "E"}, {"B", "D"}, {"C", "F"}, {"C", "G"}, {"D", "F"}, {"E", "H"}, {"G", "H"}]
+Tabl = [["1", "4"], ["1", "6"], ["1", "8"], ["2", "4"], ["2", "6"], ["2", "7"], 
+        ["3", "4"], ["3", "5"], ["3", "7"], ["4", "6"], ["4", "7"], ["5", "8"]]
+
+for perm in permutations("ABCDEFGH"):
+    if all({perm[int(a)-1], perm[int(b)-1]} in Map for a, b in Tabl):
+        print(''.join(str(perm.index(x)+1) for x in "CD"))
+
+# Задание 2 (Решение 1)
+print("x y z w")
+for x in range(2):
+    for y in range(2):
+        for z in range(2):
+            for w in range(2):
+                if ((not(x) or (not(y))) and (not(x==z)) and (not(w))):
+                    print(x, y, z, w)
+
+# Задание 2 (Решение 2)
+import itertools
+print("x y z w")
+for x, y, z, w in itertools.product([0, 1], repeat=4):
+    if ((not(x) or (not(y))) and (not(x==z)) and (not(w))):
+        print(x, y, z, w)
+
+# Задание 2 (Решение 3 - Автокод)
+import itertools
+
+def f(x, y, z, w):
+    return ((not(x) or (not(y))) and (not(x==z)) and (not(w)))
+
+for a in itertools.product([0, 1], repeat=4):
+    table = [(1, a[0], 1, a[1]), (0, 1, a[2], 0), (a[3], 0, 1, 0)]
+    if len(set(table)) != 3:
+        continue
+    for i in itertools.permutations("xyzw"):
+        if [f(**dict(zip(i, row))) for row in table] == [1, 1, 1]:
+            print(i)
+
+# Задание 5.1
+def R(n):
+    n2 = bin(n)[2:]
+    if n2.count("1") % 2 == 0:
+        n2 = "10" + n2[2:] + "0"
+    else:
+        n2 = "11" + n2[2:] + "1"
+    return int(n2, 2)
+
+for n in range(1, 1000):
+    if R(n) < 20:
+        print(n)
+
+# Задание 5.2
+ans = []
+for n in range(4, 1000):
+    n2 = bin(n)[2:]
+    if (int(n2[-1]) + int(n2[-2]) + int(n2[-3])) % 2 == 0:
+        n2 = n2 + "10"
+    if (int(n2[-1]) + int(n2[-2]) + int(n2[-3])) % 2 != 0:
+        n2 = "1" + n2 + "0"
+    R = int(n2, 2)
+    if R > 880:
+        ans.append(R)
+print(min(ans))
+
+# Задание 5.3
+def to_4(x):
+    s = ""
+    while x > 0:
+        s += str(x % 4)
+        x //= 4
+    return s[::-1]
+
+def R(n):
+    n4 = to_4(n)
+    if n % 4 == 0:
+        n4 += n4[-2:]
+    else:
+        n4 += to_4(n % 4 * 2)
+    return int(n4, 4)
+
+for n in range(1, 1000):
+    if R(n) < 479:
+        print(n)
+
+# Задание 5.4
+from itertools import permutations
+
+def F(n):
+    n_permut = list(map(int, map(''.join, permutations(str(n), 3))))
+    n_max = max(n_permut)
+    n_min = min(filter(lambda x: 100 <= x <= 999, n_permut))
+    return n_max - n_min
+
+a = []
+for n in range(10000, 100000):
+    a.append((n, F(n)))
+print(max(a, key=lambda x: (x[1], -x[0])))
+
+# Задание 6.1 (Математика)
+from math import *
+cnt = 0
+for x in range(0, 200):
+    for y in range(0, 200):
+        if x > 0 and y > tan(radians(30)) * x and y < tan(radians(150)) * x + 111:
+            cnt += 1
+print(cnt)
+
+# Задание 6.1 (Черепаха)
+import turtle
+t = turtle.Pen()
+t.speed(0)
+k = 100
+t.left(90)
+t.begin_fill()
+for i in range(3):
+    t.forward(111 * k)
+    t.right(120)
+t.end_fill()
+
+cnt = 0
+canvas = turtle.getcanvas()
+for x in range(-400 * k, 400 * k, k):
+    for y in range(-400 * k, 400 * k, k):
+        tmp = canvas.find_overlapping(x, y, x, y)
+        if tmp == (5,):
+            cnt += 1
+print(cnt)
+turtle.mainloop()
+
+# Задание 6.2
+from turtle import *
+speed(0)
+tracer(0)
+screensize(2000, 2000)
+pendown()
+k = 20
+for i in range(4):
+    forward(28 * k)
+    right(90)
+    forward(26 * k)
+    right(90)
+penup()
+forward(8 * k)
+right(90)
+forward(7 * k)
+left(90)
+pendown()
+for i in range(4):
+    forward(67 * k)
+    right(90)
+    forward(98 * k)
+    right(90)
+penup()
+# Подсчет точек визуально или перебором (см. комментарий к задаче: 18*19=342)
+done()
+
+# Задание 6.3
+from turtle import *
+speed(0)
+tracer(0)
+pendown()
+left(90)
+k = 30
+for i in range(4):
+    forward(10 * k)
+    right(270)
+penup()
+forward(3 * k)
+right(270)
+forward(5 * k)
+right(90)
+pendown()
+for i in range(2):
+    forward(10 * k)
+    right(270)
+    forward(12 * k)
+    right(270)
+penup()
+for x in range(-20, 20):
+    for y in range(-20, 20):
+        setpos(x * k, y * k)
+        dot()
+done()
+
+# Задание 7.6
+n = 1920 * 1920
+i = 14
+v = n * i
+V = 1474560 * 280
+print(V / v)
+
+# Задание 8.1
+from itertools import *
+cnt = 1
+for i in product("АБМРУ", repeat=5):
+    if i[0] == "Р":
+        print(cnt)
+        break
+    cnt += 1
+
+# Задание 8.2
+from itertools import *
+cnt = 1
+result = 0
+for i in product(sorted("МОНТАЖЕР"), repeat=6):
+    x = "".join(i)
+    if cnt % 3 == 0 and x[0] == "О" and 2 <= x.count("Ж") <= 3:
+        result += 1
+    cnt += 1
+print(result)
+
+# Задание 8.3
+from itertools import *
+cnt = 0
+for i in product("АЛГОРИТМ", repeat=7):
+    cnt_glas = 0
+    cnt_soglas = 0
+    for s in "АОИ":
+        cnt_glas += i.count(s)
+    for s in "ЛГРТМ":
+        cnt_soglas += i.count(s)
+    if cnt_soglas > cnt_glas:
+        cnt += 1
+print(cnt)
+
+# Задание 8.4
+from itertools import *
+cnt = 0
+for i in set(permutations("ДИАНА", 5)):
+    if "АА" not in "".join(i):
+        cnt += 1
+print(cnt)
+
+# Задание 8.5
+from itertools import *
+cnt = 0
+for i in product("01234567", repeat=5):
+    if i[0] not in "0246" and i[-1] not in "15" and i.count("7") <= 1:
+        cnt += 1
+print(cnt)
+
+# Задание 9.1
+file = open("9.txt")
+answer = 0
+for line in file:
+    numbers = sorted(list(map(int, line.split())))
+    if numbers[-1] < sum(numbers[:-1]) and len(set(numbers)) == len(numbers):
+        answer += 1
+print(answer)
+
+# Задание 9.2
+f = open("9.txt")
+cnt = 0
+for line in f:
+    numbers = sorted(list(map(int, line.split())))
+    repeat = [x for x in numbers if numbers.count(x) > 1]
+    not_repeat = [x for x in numbers if numbers.count(x) == 1]
+    if len(set(numbers)) == 5 and len(repeat) == 3 and repeat[0] > max(not_repeat):
+        cnt += 1
+print(cnt)
+
+# Задание 11.3
+from math import *
+for N in range(1, 10000):
+    A = 10 + 26 + 510
+    i = ceil(log2(A))
+    V1 = ceil((N * i) / 8)
+    V2 = 870 * V1
+    if V2 > 150 * 2**10:
+        print(N)
+        break
+
+# Задание 11.4
+from math import *
+for N in range(1, 10000):
+    A = 10 + 52 + 4044
+    i = ceil(log2(A))
+    V1 = ceil((N * i) / 8)
+    V2 = 7777 * V1
+    if V2 < 566 * 2**10:
+        print(N)
+
+# Задание 11.5
+from math import *
+for A in range(1, 10000):
+    n = 254
+    i = ceil(log2(A))
+    V1 = ceil((n * i) / 8)
+    V2 = (V1 * 54765)
+    if V2 >= 21 * 2**20:
+        print(A)
+        break
+
+# Задание 11.6
+from math import *
+for A in range(1, 1000):
+    V1 = ceil((450 * ceil(log2(A))) / 8)
+    V2 = V1 * 780100
+    if V2 <= 83 * 2**20:
+        print(A)
+
+# Задание 13.1
+from ipaddress import *
+ip_net = ip_network('167.128.125.83/255.255.255.224', 0)
+print(ip_net[-2])
+
+# Задание 13.2
+from ipaddress import *
+ip_net = ip_network("181.165.16.108/255.255.192.0", False)
+cnt = 0
+for ip_add in ip_net:
+    if bin(int(ip_add))[2:].count("0") % 9 == 0:
+        cnt += 1
+print(cnt)
+
+# Задание 14.1
+def to_9(n):
+    s = ""
+    while n > 0:
+        s = str(n % 9) + s
+        n //= 9
+    return s
+
+for x in range(1, 2030 + 1):
+    s = 9**360 + 9**260 + 9**160 - x
+    s_9 = to_9(s)
+    if s_9.count('0') == 223:
+        print(x)
+
+# Задание 14.2
+s = 2 * 3**1024 - 3 * 2**1213 + 8 * 15**41 + 8 * 3**231
+print(bin(s)[2:].count('1'))
+
+# Задание 14.3
+for x in '0123456789ABCDEFGHIJ':
+    s = int(f'11{x}CAF', 20) + int(f'47{x}H{x}', 20)
+    if s % 19 == 0:
+        print(s // 19)
+
+# Задание 15 (Основа)
+def Del(n, m):
+    return n % m == 0
+
+for A in range(1, 1000):
+    for x in range(1, 1000):
+        if (Del(x, A) <= ((not(Del(x, 78))) or Del(x, 52))) == False:
+            break
+    else:
+        print(A)
+        break
+
+# Задание 15.1 (Способ 1)
+def Del(n, m):
+    return n % m == 0
+
+def f(x, A):
+    return (not(Del(x, A))) <= ((not(Del(x, 18))) or (not(Del(x, 42))))
+
+for A in range(1, 1000):
+    flag = True
+    for x in range(1, 1000):
+        if not f(x, A):
+            flag = False
+            break
+    if flag:
+        print(A)
+
+# Задание 15.1 (Способ 2)
+def Del(n, m):
+    return n % m == 0
+
+def f(x, A):
+    return (not(Del(x, A))) <= ((not(Del(x, 18))) or (not(Del(x, 42))))
+
+for A in range(1, 1000):
+    for x in range(1, 1000):
+        if not f(x, A):
+            break
+    else:
+        print(A)
+
+# Задание 15.1 (Способ 3)
+def Del(n, m):
+    return n % m == 0
+
+def f(x, A):
+    return (not(Del(x, A))) <= ((not(Del(x, 18))) or (not(Del(x, 42))))
+
+for A in range(1, 1000):
+    if all(f(x, A) for x in range(1, 1000)):
+        print(A)
+
+# Задание 15.2 (Способ 1)
+def f(x, A):
+    return (x & 34 != 0) <= ((x & 41 == 0) <= (x & A != 0))
+
+for A in range(1, 1000):
+    for x in range(1, 1000):
+        if not f(x, A):
+            break
+    else:
+        print(A)
+        break
+
+# Задание 15.3
+def f(x, y, A):
+    return ((y + 5 * x != 31) or (A > x - 2)) and (A < y + 37)
+
+for A in range(1, 1000):
+    if all(f(x, y, A) for x in range(1, 1000) for y in range(1, 1000)):
+        print(A)
+        break
+
+# Задание 15.4
+R = list(range(12, 32))
+Q = list(range(6, 16))
+P = list(range(17, 24))
+A = []
+for x in range(1000):
+    if (((x in A) or (x in P)) or ((x in Q) <= (x in R))) == False:
+        A.append(x)
+print(A)
+
+# Задание 15.5
+Q = list(range(8, 18))
+P = list(range(3, 12))
+A = list(range(1, 1000))
+for x in range(1000):
+    if (((x in A) <= (x in P)) or (x in Q)) == False:
+        A.remove(x)
+print(A)
+
+# Задание 15.6
+def Del(n, m):
+    return n % m == 0
+
+def f(x, A):
+    return (((x + 40 < A) or (x + A < 40)) <= (Del(x, A)))
+
+for A in range(1, 1000):
+    if all(f(x, A) for x in range(1, 1000)):
+        print(A)
+
+# Задание 17.1
+f = open("17.txt")
+a = [int(s) for s in f]
+pari = []
+for i in range(len(a) - 1):
+    if a[i] % 180 == min(a) or a[i + 1] % 180 == min(a):
+        pari.append(a[i] + a[i + 1])
+print(len(pari), min(pari))
+
+# Задание 17.2
+f = open("17.txt")
+data = [int(x) for x in f.read().split()]
+min_3 = min(x for x in data if 100 <= abs(x) <= 999 and abs(x) % 10 == 3)
+res = []
+for i in range(len(data) - 1):
+    a, b = data[i], data[i + 1]
+    if ((100 <= abs(a) <= 999) + (100 <= abs(b) <= 999)) == 1:
+        s = a + b
+        if s % min_3 == 0:
+            res.append(s)
+print(len(res), max(res))
+
+# Задания 19-21.1
+def g(s, p, end):
+    if s <= 16:
+        return p in end
+    if p >= max(end):
+        return False
+    h = []
+    h.append(g(s - 1, p + 1, end))
+    h.append(g(s - 2, p + 1, end))
+    if s % 2 == 0:
+        h.append(g(s // 2, p + 1, end))
+    return any(h) if (p + 1) % 2 == (end[0] % 2) else all(h)
+
+print([s for s in range(17, 500) if g(s, 0, [2])])  # 19
+print(sorted([s for s in range(16, 500) if g(s, 0, [3]) and not g(s, 0, [1])])[:2])  # 20
+print(min([s for s in range(17, 500) if g(s, 0, [2, 4]) and not g(s, 0, [2])]))  # 21
+
+# Задания 19-21.2
+def g(s, p, end):
+    if s >= 111:
+        return p in end
+    if p >= max(end):
+        return False
+    h = []
+    h.append(g(s + 4, p + 1, end))
+    h.append(g(s * 3, p + 1, end))
+    return any(h) if (p + 1) % 2 == (end[0] % 2) else all(h)
+
+print([s for s in range(1, 111) if g(s, 0, [2])])  # 19
+print(sorted([s for s in range(1, 111) if g(s, 0, [3]) and not g(s, 0, [1])])[:2])  # 20
+print(min([s for s in range(1, 111) if g(s, 0, [2, 4]) and not g(s, 0, [2])]))  # 21
+
+# Задание 23
+def task23(start, end):
+    if start > end or start == 23:
+        return 0
+    elif start == end:
+        return 1
+    else:
+        return task23(start + 1, end) + task23(start * 2, end)
+
+print(task23(4, 66) * task23(66, 98))
+
+# Задание 24
+f = open("24.txt").read()
+ind = [i for i in range(len(f)) if f[i] == "X"]
+itog = []
+for i in range(len(ind) - 60):
+    stroka = f[ind[i] + 1 : ind[i + 60]]
+    if stroka.count("2025") >= 101:
+        itog.append(len(stroka))
+print(max(itog))
+
+# Задание 25.1
+from fnmatch import fnmatch
+for i in range(146, 10**8, 146):
+    if fnmatch(str(i), '17?537*'):
+        print(i, i // 146)
+
+# Задание 25.2
+def is_Prime(n):
+    for x in range(2, int(n**0.5) + 1):
+        if n % x == 0:
+            return False
+    return n > 1
+
+n = 5_900_001
+cnt = 0
+while cnt != 5:
+    deliteli = []
+    for i in range(1, int(n**0.5) + 1):
+        if i * i == n:
+            deliteli.append(i)
+        elif n % i == 0:
+            deliteli.append(i)
+            deliteli.append(n // i)
+    prime_deliteli = []
+    for i in deliteli:
+        if is_Prime(i):
+            prime_deliteli.append(i)
+    if len(prime_deliteli) > 0:
+        M = min(prime_deliteli) + max(prime_deliteli)
+        if M > 50_000 and str(M) == str(M)[::-1]:
+            print(n, M)
+            cnt += 1
+    n += 1
+
+# Задание 26
+f = open('26.17.txt')
+n = int(f.readline())
+data = [[] for i in range(100000)]
+ryad, number = 10**6, 10**6
+for i in range(n):
+    x, y = map(int, f.readline().split())
+    data[x].append(y)
+for i in range(len(data)):
+    if len(data[i]) >= 2:
+        data[i].sort()
+        for j in range(len(data[i]) - 1):
+            if data[i][j + 1] - data[i][j] == 4 and i < ryad:
+                ryad = i
+                number = data[i][j] + 1
+print(ryad, number)
+
+# Задание 27 (без аномалий) - Файл А
+f = open('task27_1/27A.txt')
+f.readline()
+roots = [list(map(float, s.replace(",", ".").split())) for s in f]
+mn = 10**10
+ans = []
+for i in range(len(roots)):
+    for j in range(i + 1, len(roots)):
+        a = roots[i]
+        b = roots[j]
+        s = 0
+        for d in roots:
+            d1 = ((d[0] - a[0])**2 + (d[1] - a[1])**2)**0.5
+            d2 = ((d[0] - b[0])**2 + (d[1] - b[1])**2)**0.5
+            s += min(d1, d2)
+        if s < mn:
+            mn = s
+            ans = [a, b]
+print(int((ans[0][0] + ans[1][0]) / 2 * 10000), int((ans[0][1] + ans[1][1]) / 2 * 10000))
+
+# Задание 27 (без аномалий) - Графический метод (Файл А)
+import math
+f = open("task27_1/27A.txt")
+f.readline()
+roots = [list(map(float, s.replace(",", ".").split())) for s in f]
+clusters = [[], []]
+for x, y in roots:
+    if x < 2:
+        clusters[0].append((x, y))
+    else:
+        clusters[1].append((x, y))
+best_centroids = [[] for i in range(len(clusters))]
+for i in range(len(clusters)):
+    min_dist = 10**10
+    for x1, y1 in clusters[i]:
+        dist = 0
+        for x2, y2 in clusters[i]:
+            dist += math.dist([x1, y1], [x2, y2])
+        if dist < min_dist:
+            min_dist = dist
+            best_centroids[i] = [x1, y1]
+P_x = sum([x for x, y in best_centroids]) / len(clusters)
+P_y = sum([y for x, y in best_centroids]) / len(clusters)
+print(int(P_x * 10_000), int(P_y * 10_000))
+
+# Задание 27 (без аномалий) - Графический метод (Файл Б)
+import math
+f = open("task27_1/27B.txt")
+f.readline()
+roots = [list(map(float, s.replace(",", ".").split())) for s in f]
+clusters = [[], [], []]
+for x, y in roots:
+    if x < 1:
+        clusters[0].append((x, y))
+    elif y > 0:
+        clusters[1].append((x, y))
+    else:
+        clusters[2].append((x, y))
+best_centroids = [[] for i in range(len(clusters))]
+for i in range(len(clusters)):
+    min_dist = 10**10
+    for x1, y1 in clusters[i]:
+        dist = 0
+        for x2, y2 in clusters[i]:
+            dist += math.dist([x1, y1], [x2, y2])
+        if dist < min_dist:
+            min_dist = dist
+            best_centroids[i] = [x1, y1]
+P_x = sum([x for x, y in best_centroids]) / len(clusters)
+P_y = sum([y for x, y in best_centroids]) / len(clusters)
+print(int(P_x * 10_000), int(P_y * 10_000))
+
+# Задание 27 (без аномалий) - DBSCAN
+import math
+# from turtle import * # Опущено для краткости, визуализация не нужна для ответа
+f = open('task27_1/27A.txt')
+f.readline()
+points = [list(map(float, s.replace(",", ".").split())) for s in f]
+clusters, epsilon = [], 1
+while points:
+    clusters.append([points[0]])
+    del points[0]
+    for p1 in clusters[-1]:
+        for p2 in points[:]:
+            if math.dist(p1, p2) < epsilon:
+                clusters[-1].append(p2)
+                points.remove(p2)
+best_centroids = [[] for i in range(len(clusters))]
+for i in range(len(clusters)):
+    min_dist = 10**10
+    for x1, y1 in clusters[i]:
+        dist = 0
+        for x2, y2 in clusters[i]:
+            euclidian_dist = math.dist([x1, y1], [x2, y2])
+            dist += euclidian_dist
+        if dist < min_dist:
+            min_dist = dist
+            best_centroids[i] = [x1, y1]
+P_x = sum([x for x, y in best_centroids]) / len(clusters) * 10_000
+P_y = sum([y for x, y in best_centroids]) / len(clusters) * 10_000
+print(int(P_x), int(P_y))
+
+# Задание 27 (с аномалиями) - Графический метод (Файл Б)
+import math
+f = open("task27_4/27_B.txt")
+f.readline()
+roots = [list(map(float, s.replace(",", ".").split())) for s in f]
+clusters = [[], [], []]
+for x, y in roots:
+    if 9 < x < 16 and y < 10:
+        clusters[0].append((x, y))
+    elif y > 21 and 9 < x < 16:
+        clusters[1].append((x, y))
+    elif 16 < y < 21 and 6 < x < 13:
+        clusters[2].append((x, y))
+best_centroids = [[] for i in range(len(clusters))]
+for i in range(len(clusters)):
+    min_dist = 10**10
+    for x1, y1 in clusters[i]:
+        dist = 0
+        for x2, y2 in clusters[i]:
+            dist += math.dist([x1, y1], [x2, y2])
+        if dist < min_dist:
+            min_dist = dist
+            best_centroids[i] = [x1, y1]
+max_idx = clusters.index(max(clusters, key=len))
+min_idx = clusters.index(min(clusters, key=len))
+Q1 = abs(best_centroids[max_idx][0] - best_centroids[min_idx][0])
+Q2 = abs(best_centroids[max_idx][1] - best_centroids[min_idx][1])
+print(int(Q1 * 10_000), int(Q2 * 10_000))
+
+# Задание 27 (с аномалиями) - DBSCAN
+import math
+f = open('task27_4/27_B.txt')
+f.readline()
+points = [list(map(float, s.replace(",", ".").split())) for s in f]
+clusters, epsilon = [], 1
+while points:
+    clusters.append([points[0]])
+    del points[0]
+    for p1 in clusters[-1]:
+        for p2 in points[:]:
+            if math.dist(p1, p2) < epsilon:
+                clusters[-1].append(p2)
+                points.remove(p2)
+    if len(clusters[-1]) <= 1:
+        del clusters[-1]
+best_centroids = [[] for i in range(len(clusters))]
+for i in range(len(clusters)):
+    min_dist = 10**10
+    for x1, y1 in clusters[i]:
+        dist = 0
+        for x2, y2 in clusters[i]:
+            euclidian_dist = math.dist([x1, y1], [x2, y2])
+            dist += euclidian_dist
+        if dist < min_dist:
+            min_dist = dist
+            best_centroids[i] = [x1, y1]
+max_idx = clusters.index(max(clusters, key=len))
+min_idx = clusters.index(min(clusters, key=len))
+Q1 = abs(best_centroids[max_idx][0] - best_centroids[min_idx][0])
+Q2 = abs(best_centroids[max_idx][1] - best_centroids[min_idx][1])
+print(int(Q1 * 10_000), int(Q2 * 10_000))
